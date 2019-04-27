@@ -1,0 +1,19 @@
+﻿<Page
+    x:Class="Spotify.Uwp.Showcase.Pages.CategoriesPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Spotify.Uwp.Showcase.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid>
+        <GridView Name="Items" Margin="5" ItemsSource="{Binding Collection}"
+        HorizontalAlignment="Left" VerticalAlignment="Top"
+        ItemTemplate="{StaticResource CategoryItemTemplate}"/>
+        <ProgressRing IsActive="{Binding Loading}"
+        HorizontalAlignment="Center" VerticalAlignment="Center" 
+        Height="64" Width="64" Visibility="{Binding Loading, 
+        Converter={StaticResource BooleanToVisibilityConverter}}"/>
+    </Grid>
+</Page>

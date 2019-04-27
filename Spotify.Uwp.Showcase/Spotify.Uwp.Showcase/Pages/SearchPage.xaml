@@ -1,0 +1,60 @@
+﻿<Page
+    x:Class="Spotify.Uwp.Showcase.Pages.SearchPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Spotify.Uwp.Showcase.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <Pivot>
+            <PivotItem Header="Songs">
+                <Grid>
+                    <ListView Margin="5" ItemsSource="{Binding Tracks}"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                    ItemTemplate="{StaticResource TrackItemTemplate}" 
+                    ItemContainerStyle="{StaticResource ListViewStyle}"/>
+                    <ProgressRing IsActive="{Binding LoadingTracks}"
+                    HorizontalAlignment="Center" VerticalAlignment="Center" 
+                    Height="64" Width="64" Visibility="{Binding LoadingTracks, 
+                    Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                </Grid>
+            </PivotItem>
+            <PivotItem Header="Artists">
+                <Grid>
+                    <GridView Margin="5" ItemsSource="{Binding Artists}"
+                    HorizontalAlignment="Left" VerticalAlignment="Top"
+                    ItemTemplate="{StaticResource ArtistItemTemplate}"/>
+                    <ProgressRing IsActive="{Binding LoadingArtists}"
+                    HorizontalAlignment="Center" VerticalAlignment="Center" 
+                    Height="64" Width="64" Visibility="{Binding LoadingArtists, 
+                    Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                </Grid>
+            </PivotItem>
+            <PivotItem Header="Albums">
+                <Grid>
+                    <GridView Margin="5" ItemsSource="{Binding Albums}"
+                    HorizontalAlignment="Left" VerticalAlignment="Top"
+                    ItemTemplate="{StaticResource AlbumItemTemplate}"/>
+                    <ProgressRing IsActive="{Binding LoadingAlbums}"
+                    HorizontalAlignment="Center" VerticalAlignment="Center" 
+                    Height="64" Width="64" Visibility="{Binding LoadingAlbums, 
+                    Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                </Grid>
+            </PivotItem>
+            <PivotItem Header="Playlists">
+                <Grid>
+                    <GridView Margin="5" ItemsSource="{Binding Playlists}"
+                    HorizontalAlignment="Left" VerticalAlignment="Top"
+                    ItemTemplate="{StaticResource PlaylistItemTemplate}"/>
+                    <ProgressRing IsActive="{Binding LoadingPlaylists}"
+                    HorizontalAlignment="Center" VerticalAlignment="Center" 
+                    Height="64" Width="64" Visibility="{Binding LoadingPlaylists, 
+                    Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                </Grid>
+            </PivotItem>
+        </Pivot>
+    </Grid>
+</Page>
