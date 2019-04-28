@@ -66,7 +66,7 @@ namespace Spotify.Uwp.Showcase.ViewModels
         private async void Get(string id)
         {
             Set(id);
-            Item = await _client.GetTrack(id);
+            Item = await _client.GetTrackAsync(id);
             if (Item?.Artist != null)
                 Item.Artist.Command = new RelayCommand(ArtistCommand);
             if (Item?.Album != null)

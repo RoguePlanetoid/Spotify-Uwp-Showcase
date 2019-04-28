@@ -33,7 +33,7 @@ namespace Spotify.Uwp.Showcase
         {
             Init();
             SpotifySdkClient = SpotifySdkClientFactory.CreateSpotifySdkClient(
-                _config["client_id"], _config["client_secret"]);
+                _config["client_id"], _config["client_secret"], null, null);
         }
 
         public static SpotifySdk Instance

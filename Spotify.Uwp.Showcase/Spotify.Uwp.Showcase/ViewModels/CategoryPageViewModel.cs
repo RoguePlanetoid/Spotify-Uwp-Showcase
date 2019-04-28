@@ -40,7 +40,7 @@ namespace Spotify.Uwp.Showcase.ViewModels
         /// <param name="id"></param>
         private async void Get(string id)
         {
-            Item = await _client.GetCategory(id);
+            Item = await _client.GetCategoryAsync(id);
             Collection = new ListPlaylistViewModel(
                 _client, PlaylistType.CategoriesPlaylists, 
                 id: Item.Id);

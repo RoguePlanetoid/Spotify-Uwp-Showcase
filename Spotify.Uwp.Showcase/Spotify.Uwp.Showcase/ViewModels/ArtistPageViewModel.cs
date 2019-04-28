@@ -94,7 +94,7 @@ namespace Spotify.Uwp.Showcase.ViewModels
         private async void Get(string id)
         {
             Set(id);
-            Item = await _client.GetArtist(id);
+            Item = await _client.GetArtistAsync(id);
         }
 
         /// <summary>
