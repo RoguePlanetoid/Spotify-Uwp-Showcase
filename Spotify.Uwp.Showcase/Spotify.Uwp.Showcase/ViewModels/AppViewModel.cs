@@ -115,9 +115,9 @@ namespace Spotify.Uwp.Showcase.ViewModels
         public async void Start()
         {
             _client.Token = 
-                await Load<TokenViewModel>(filename_token);
+                await Load<TokenViewModel>(filename_token) ?? null;
             _client.Favourites =
-                await Load<ListFavouriteViewModel>(filename_favourites);
+                await Load<ListFavouriteViewModel>(filename_favourites) ?? null;
             _client.Favourites = _client.Favourites ?? new ListFavouriteViewModel();
         }
 
