@@ -16,7 +16,7 @@ namespace Spotify.Uwp.Showcase
         /// <summary>
         /// Spotify SDK Client
         /// </summary>
-        public ISpotifySdkClient SpotifySdkClient { get; }
+        public ISpotifySdkClient SpotifySdkClient { get; private set; }
         #endregion Public Properties
 
         #region Singleton
@@ -25,15 +25,17 @@ namespace Spotify.Uwp.Showcase
         private static volatile SpotifySdk instance;
         private static object syncRoot = new object();
 
-        private async void Init() => 
+        private async void Init()
+        {
             _config = await Configuration.GetConfig();
+            SpotifySdkClient = SpotifySdkClientFactory.CreateSpotifySdkClient(
+            _config["client_id"], _config["client_secret"]);
+        } 
 
         /// <summary>Constructor</summary>
         private SpotifySdk()
         {
             Init();
-            SpotifySdkClient = SpotifySdkClientFactory.CreateSpotifySdkClient(
-                _config["client_id"], _config["client_secret"], null, null);
         }
 
         public static SpotifySdk Instance
