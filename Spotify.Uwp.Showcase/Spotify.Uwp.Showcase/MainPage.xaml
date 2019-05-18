@@ -1,0 +1,58 @@
+﻿<Page
+    x:Class="Spotify.Uwp.Showcase.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Spotify.Uwp.Showcase"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <NavigationView Name="Navigation"
+            Loaded="{x:Bind Item.Loaded}"
+            ItemInvoked="{x:Bind Item.ItemInvoked}" 
+            BackRequested="Navigation_BackRequested">
+            <NavigationView.AutoSuggestBox>
+                <AutoSuggestBox x:Name="Search" QueryIcon="Find" QuerySubmitted="{x:Bind Item.QuerySubmitted}"/>
+            </NavigationView.AutoSuggestBox>
+
+            <NavigationView.MenuItems>
+                <NavigationViewItem Tag="favourites" Content="Favourites">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE728;" FontFamily="Segoe MDL2 Assets"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+
+                <NavigationViewItemHeader Content="Browse"/>
+
+                <NavigationViewItem Tag="categories" Content="Categories">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xF0E2;" FontFamily="Segoe MDL2 Assets"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+
+                <NavigationViewItem Tag="newreleases" Content="New Releases">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE945;" FontFamily="Segoe MDL2 Assets"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+
+                <NavigationViewItem Tag="featured" Content="Featured Playlists">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xEA80;" FontFamily="Segoe MDL2 Assets"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+
+                <NavigationViewItem Tag="recommended" Content="Recommended">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE209;" FontFamily="Segoe MDL2 Assets"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+            </NavigationView.MenuItems>
+            <ScrollViewer>
+                <Frame x:Name="ContentFrame" IsTabStop="True" Navigated="{x:Bind Item.Navigated}"/>
+            </ScrollViewer>
+        </NavigationView>
+    </Grid>
+</Page>

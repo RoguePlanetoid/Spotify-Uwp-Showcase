@@ -1,0 +1,34 @@
+﻿<Page
+    x:Class="Spotify.Uwp.Showcase.Pages.AlbumPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Spotify.Uwp.Showcase.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <ContentControl Grid.Row="0" Margin="5" Content="{Binding Item}"
+        ContentTemplate="{StaticResource AlbumDetailsTemplate}"/>
+        <ListView Grid.Row="1" Margin="5" ItemsSource="{Binding Collection}"
+        HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+        ItemTemplate="{StaticResource TrackItemTemplate}" 
+        ItemContainerStyle="{StaticResource ListViewStyle}"/>
+        <ProgressRing Grid.Row="1" IsActive="{Binding Loading}"
+        HorizontalAlignment="Center" VerticalAlignment="Center" 
+        Height="64" Width="64" Visibility="{Binding Loading, 
+        Converter={StaticResource BooleanToVisibilityConverter}}"/>
+        <CommandBar Grid.Row="1" IsOpen="True" IsSticky="True" 
+            HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
+            <AppBarToggleButton Label="Favourite" Icon="Favorite" 
+            IsChecked="{Binding ToggleFavourite.Value}" 
+            Command="{Binding ToggleFavourite.Command}" 
+            CommandParameter="{Binding ToggleFavourite}"/>
+        </CommandBar>
+    </Grid>
+</Page>
