@@ -1,7 +1,11 @@
-﻿using Spotify.Uwp.Showcase.Pages;
+﻿using Spotify.Uwp.Exceptions;
+using Spotify.Uwp.Showcase.Classes;
+using Spotify.Uwp.Showcase.Pages;
+using Spotify.Uwp.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -14,13 +18,22 @@ namespace Spotify.Uwp.Showcase.ViewModels
     /// <summary>
     /// Main Page View Model
     /// </summary>
-    public class MainPageViewModel
+    public class MainPageViewModel : BasePageViewModel
     {
+        #region Private Constants
+        private const string from_token = "from_token";
+        private const string app_name = "Spotify Showcase";
+        private readonly LoginType login_type = LoginType.ImplicitGrant;
+        #endregion Private Constants
+
         #region Private Members
         private bool _loading;
         private Frame _contentFrame;
         private NavigationView _navigation;
+        private WebView _webView;
         private ISpotifySdkClient _client = null;
+        private CurrentUserViewModel _currentUser = null;
+        private Dialog _dialog = new Dialog();
 
         private readonly NavigationTransitionInfo 
             _transition = new EntranceNavigationTransitionInfo();
@@ -39,11 +52,40 @@ namespace Spotify.Uwp.Showcase.ViewModels
             ("album", typeof(AlbumPage)),
             ("artist", typeof(ArtistPage)),
             ("track", typeof(TrackPage)),
-            ("recommendation", typeof(RecommendationPage))
+            ("recommendation", typeof(RecommendationPage)),
+            ("usertracks", typeof(UserTracksPage)),
+            ("useralbums", typeof(UserAlbumsPage)),
+            ("userartists", typeof(UserArtistsPage)),
+            ("userplaylists", typeof(UserPlaylistsPage)),
+            ("userplaylist", typeof(UserPlaylistPage)),
         };
         #endregion Private Members
 
         #region Private Methods
+        /// <summary>
+        /// Login
+        /// </summary>
+        /// <returns>Tuple of Success and Error Message (if any)</returns>
+        private async Task<(bool success, string error)> Login()
+        {
+            var uri = await WebViewUri();
+            if (uri.Host == _client.LoginRedirectUri.Host)
+            {
+                _webView.Visibility = Visibility.Collapsed;
+                try
+                {
+                    _client.Token = await _client.GetLoginTokenAsync(login_type, uri);
+                    _client.Country = _client.Country ?? from_token;
+                    return (_client.IsUserLoggedIn, null);
+                }
+                catch (AuthException ex)
+                {
+                    return (false, $"There was a problem with Login. Details: {ex.Message}");
+                }
+            }
+            return (false, null);
+        }
+
         /// <summary>
         /// Navigate
         /// </summary>
@@ -88,9 +130,61 @@ namespace Spotify.Uwp.Showcase.ViewModels
             _contentFrame.GoBack();
             return true;
         }
+
+        /// <summary>
+        /// Get
+        /// </summary>
+        private async void Get()
+        {
+            CurrentUser = await _client.GetCurrentUserAsync();
+        }
+
+        /// <summary>
+        /// Web View Uri
+        /// </summary>
+        /// <returns></returns>
+        private async Task<Uri> WebViewUri() => 
+            new Uri(await _webView.InvokeScriptAsync("eval", 
+                new string[] { "document.location.href;" }));
         #endregion Private Methods
 
+        #region Public Properties
+        /// <summary>
+        /// Current User
+        /// </summary>
+        public CurrentUserViewModel CurrentUser
+        {
+            get => _currentUser;
+            set { _currentUser = value; NotifyPropertyChanged(); }
+        }
+
+        /// <summary>
+        /// Loading Indicator
+        /// </summary>
+        public bool Loading
+        {
+            get => _loading;
+            set { _loading = value; NotifyPropertyChanged(); }
+        }
+        #endregion Public Properties
+
         #region Public Events
+        /// <summary>
+        /// Loaded
+        /// </summary>
+        public void Loaded() => 
+            Get();
+
+        /// <summary>
+        /// Token Required Event
+        /// </summary>
+        /// <param name="sender">Object</param>
+        /// <param name="e">Token Required Arguments</param>
+        public void TokenRequiredEvent(
+            object sender,
+            TokenRequiredArgs e) => 
+            ShowWebViewLogin();
+
         /// <summary>
         /// Back Requested
         /// </summary>
@@ -136,9 +230,10 @@ namespace Spotify.Uwp.Showcase.ViewModels
                 _contentFrame.SourcePageType == typeof(AlbumPage) ||
                 _contentFrame.SourcePageType == typeof(ArtistPage) ||
                 _contentFrame.SourcePageType == typeof(TrackPage) ||
-                _contentFrame.SourcePageType == typeof(RecommendationPage)) 
+                _contentFrame.SourcePageType == typeof(RecommendationPage) ||
+                _contentFrame.SourcePageType == typeof(UserPlaylistPage)) 
             {
-
+                // Do Nothing
             }
             else if (_contentFrame.SourcePageType == typeof(SearchPage))
             {
@@ -194,11 +289,11 @@ namespace Spotify.Uwp.Showcase.ViewModels
                 $"Results for \"{args.QueryText}\"");
 
         /// <summary>
-        /// Loaded
+        /// Navigation Loaded
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void Loaded(object sender, RoutedEventArgs e)
+        public void NavigationLoaded(object sender, RoutedEventArgs e)
         {
             Navigate("favourites", new EntranceNavigationTransitionInfo());
             // GO-BACK
@@ -213,6 +308,42 @@ namespace Spotify.Uwp.Showcase.ViewModels
             };
             altLeft.Invoked += BackInvoked;
             _navigation.KeyboardAccelerators.Add(altLeft);
+        }
+
+        /// <summary>
+        /// Web View Navigation Starting
+        /// </summary>
+        /// <param name="webView">Web View</param>
+        /// <param name="args">Navigation Completed Arguments</param>
+        public void WebViewNavigationStarting(WebView webView,
+            WebViewNavigationStartingEventArgs args)
+        {
+            Loading = true;
+        }
+
+        /// <summary>
+        /// Web View Navigation Completed
+        /// </summary>
+        /// <param name="webView">Web View</param>
+        /// <param name="args">Navigation Completed Arguments</param>
+        public async void WebViewNavigationCompleted(WebView webView,
+            WebViewNavigationCompletedEventArgs args)
+        {
+            Loading = false;
+            var (success, error) = await Login();
+            if (success)
+            {
+                _navigation.Visibility = Visibility.Visible;
+                CurrentUser = await _client.GetCurrentUserAsync();
+            }
+            else
+            {
+                if (!string.IsNullOrEmpty(error))
+                {
+                    ShowWebViewLogin();
+                    await _dialog.ShowAsync(error, app_name);
+                }
+            }
         }
         #endregion Public Events
 
@@ -260,6 +391,17 @@ namespace Spotify.Uwp.Showcase.ViewModels
             if (preNavPageType == _page)
                 _contentFrame.BackStack.Remove(_contentFrame.BackStack.LastOrDefault());
         }
+
+        /// <summary>
+        /// Show WebView Login
+        /// </summary>
+        public void ShowWebViewLogin()
+        {
+            _navigation.Visibility = Visibility.Collapsed;
+            _webView.Visibility = Visibility.Visible;
+            var uri = _client.GetLoginUri(login_type, ScopeViewModel.AllPermissions, true);
+            _webView.Navigate(uri);
+        }
         #endregion Public Methods
 
         #region Constructor
@@ -268,11 +410,14 @@ namespace Spotify.Uwp.Showcase.ViewModels
         public MainPageViewModel(
             ISpotifySdkClient client,
             NavigationView navigation,
-            Frame content)
+            Frame content,
+            WebView webView)
         {
             _client = client;
             _navigation = navigation;
             _contentFrame = content;
+            _webView = webView;
+            _client.TokenRequiredEvent += TokenRequiredEvent;
         }
         #endregion Constructor
     }

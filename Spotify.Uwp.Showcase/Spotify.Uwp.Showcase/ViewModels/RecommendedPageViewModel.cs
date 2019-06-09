@@ -2,14 +2,15 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace Spotify.Uwp.Showcase.ViewModels
 {
-    public class RecommendedPageViewModel : INotifyPropertyChanged, IDisposable
+    /// <summary>
+    /// Recommended Page View Model
+    /// </summary>
+    public class RecommendedPageViewModel : BasePageViewModel, IDisposable
     {
         #region Private Members
         private bool _loading;
@@ -18,16 +19,12 @@ namespace Spotify.Uwp.Showcase.ViewModels
         private readonly MainPage _main = (MainPage)((Frame)Window.Current.Content).Content;
         #endregion Private Members
 
-        #region Public Events
-        public event PropertyChangedEventHandler PropertyChanged;
-        #endregion Public Events
-
         #region Private Methods
         /// <summary>
-        /// Command
+        /// Recommendation Command
         /// </summary>
         /// <param name="parameter">Parameter</param>
-        private void Command(object parameter)
+        private void RecommendationCommand(object parameter)
         {
             var item = (RecommendationViewModel)parameter;
             _main.Item.Navigate("recommendation", item.Id, item.Name);
@@ -42,22 +39,21 @@ namespace Spotify.Uwp.Showcase.ViewModels
             Collection.CollectionChanged += CollectionChanged;
             Loading = true;
         }
-
-        /// <summary>
-        /// Notify Property Changed
-        /// </summary>
-        /// <param name="property"></param>
-        private void NotifyPropertyChanged([CallerMemberName] string property = "") => 
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
         #endregion Private Methods
 
         #region Public Properties
+        /// <summary>
+        /// Observable Collection of Recommendation View Model
+        /// </summary>
         public ObservableCollection<RecommendationViewModel> Collection
         {
             get => _collection;
             set { _collection = value; NotifyPropertyChanged(); }
         }
 
+        /// <summary>
+        /// Loading Indicator
+        /// </summary>
         public bool Loading
         {
             get => _loading;
@@ -78,7 +74,7 @@ namespace Spotify.Uwp.Showcase.ViewModels
             foreach (RecommendationViewModel item in e.NewItems)
             {
                 if (item != null && item.Command == null)
-                    item.Command = new RelayCommand(Command);
+                    item.Command = new RelayCommand(RecommendationCommand);
             }
             Loading = false;
         }

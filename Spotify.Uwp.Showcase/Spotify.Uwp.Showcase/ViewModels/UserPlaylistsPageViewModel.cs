@@ -8,54 +8,40 @@ using Windows.UI.Xaml.Controls;
 namespace Spotify.Uwp.Showcase.ViewModels
 {
     /// <summary>
-    /// Category Page View Model
+    /// User Playlists Page View Model
     /// </summary>
-    public class CategoryPageViewModel : BasePageViewModel, IDisposable
+    public class UserPlaylistsPageViewModel : BasePageViewModel, IDisposable
     {
         #region Private Members
         private bool _loading;
         private ISpotifySdkClient _client = null;
-        private CategoryViewModel _item = null;
         private ObservableCollection<PlaylistViewModel> _collection = null;
         private readonly MainPage _main = (MainPage)((Frame)Window.Current.Content).Content;
         #endregion Private Members
 
         #region Private Methods
         /// <summary>
-        /// Playlist Command
+        /// Command
         /// </summary>
         /// <param name="parameter">Parameter</param>
         private void PlaylistCommand(object parameter)
         {
             var item = (PlaylistViewModel)parameter;
-            _main.Item.Navigate("playlist", item.Id, item.Name);
+            _main.Item.Navigate("userplaylist", item.Id, item.Name);
         }
 
         /// <summary>
         /// Get
         /// </summary>
-        /// <param name="id">Id</param>
-        private async void Get(string id)
+        private void Get()
         {
-            Item = await _client.GetCategoryAsync(id);
-            Collection = new ListPlaylistViewModel(
-                _client, PlaylistType.CategoriesPlaylists, 
-                id: Item.Id);
+            Collection = new ListPlaylistViewModel(_client, PlaylistType.User);
             Collection.CollectionChanged += CollectionChanged;
             Loading = true;
         }
         #endregion Private Methods
 
         #region Public Properties
-        /// <summary>
-        /// Category View Model
-        /// </summary>
-        public CategoryViewModel Item
-        {
-            get => _item;
-            set { _item = value; NotifyPropertyChanged(); }
-        }
-
         /// <summary>
         /// Observable Collection of Playlist View Model
         /// </summary>
@@ -97,12 +83,11 @@ namespace Spotify.Uwp.Showcase.ViewModels
         #region Constructor
         /// <summary>Constructor</summary>
         /// <param name="client">Music Client</param>
-        public CategoryPageViewModel(
-            ISpotifySdkClient client,
-            string id)
+        public UserPlaylistsPageViewModel(
+            ISpotifySdkClient client)
         {
             _client = client;
-            Get(id);
+            Get();
         }
         #endregion Constructor
 

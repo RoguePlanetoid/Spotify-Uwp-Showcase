@@ -6,15 +6,15 @@ using Windows.UI.Xaml.Navigation;
 namespace Spotify.Uwp.Showcase.Pages
 {
     /// <summary>
-    /// Recommendation Page
+    /// User Playlist Page
     /// </summary>
-    public sealed partial class RecommendationPage : Page, IDisposable
+    public sealed partial class UserPlaylistPage : Page, IDisposable
     {
         #region Constructor
         /// <summary>
         /// Constructor
         /// </summary>
-        public RecommendationPage() =>
+        public UserPlaylistPage() =>
             this.InitializeComponent();
         #endregion Constructor
 
@@ -22,9 +22,9 @@ namespace Spotify.Uwp.Showcase.Pages
         /// <summary>OnNavigatedTo</summary>
         /// <param name="e"></param>
         protected override void OnNavigatedTo(
-            NavigationEventArgs e) =>
-                this.DataContext = new RecommendationPageViewModel(
-                SpotifySdk.Instance.SpotifySdkClient, (string)e.Parameter);
+            NavigationEventArgs e) => 
+                this.DataContext = new UserPlaylistPageViewModel(
+                    SpotifySdk.Instance.SpotifySdkClient, (string)e.Parameter);
         #endregion Event Handlers
 
         #region Public Methods

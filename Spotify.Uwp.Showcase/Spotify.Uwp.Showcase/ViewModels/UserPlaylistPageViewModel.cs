@@ -8,27 +8,47 @@ using Windows.UI.Xaml.Controls;
 namespace Spotify.Uwp.Showcase.ViewModels
 {
     /// <summary>
-    /// Category Page View Model
+    /// User Playlist Page View Model
     /// </summary>
-    public class CategoryPageViewModel : BasePageViewModel, IDisposable
+    public class UserPlaylistPageViewModel : BasePageViewModel, IDisposable
     {
         #region Private Members
         private bool _loading;
         private ISpotifySdkClient _client = null;
-        private CategoryViewModel _item = null;
-        private ObservableCollection<PlaylistViewModel> _collection = null;
+        private PlaylistViewModel _item = null;
+        private ObservableCollection<TrackViewModel> _collection = null;
         private readonly MainPage _main = (MainPage)((Frame)Window.Current.Content).Content;
         #endregion Private Members
 
         #region Private Methods
         /// <summary>
-        /// Playlist Command
+        /// Track Command
         /// </summary>
         /// <param name="parameter">Parameter</param>
-        private void PlaylistCommand(object parameter)
+        private void TrackCommand(object parameter)
         {
-            var item = (PlaylistViewModel)parameter;
-            _main.Item.Navigate("playlist", item.Id, item.Name);
+            var item = (TrackViewModel)parameter;
+            _main.Item.Navigate("track", item.Id, item.Name);
+        }
+
+        /// <summary>
+        /// Artist Command
+        /// </summary>
+        /// <param name="parameter">Parameter</param>
+        private void ArtistCommand(object parameter)
+        {
+            var item = (ArtistViewModel)parameter;
+            _main.Item.Navigate("artist", item.Id, item.Name);
+        }
+
+        /// <summary>
+        /// Album Command
+        /// </summary>
+        /// <param name="parameter">Parameter</param>
+        private void AlbumCommand(object parameter)
+        {
+            var item = (AlbumViewModel)parameter;
+            _main.Item.Navigate("album", item.Id, item.Name);
         }
 
         /// <summary>
@@ -37,9 +57,9 @@ namespace Spotify.Uwp.Showcase.ViewModels
         /// <param name="id">Id</param>
         private async void Get(string id)
         {
-            Item = await _client.GetCategoryAsync(id);
-            Collection = new ListPlaylistViewModel(
-                _client, PlaylistType.CategoriesPlaylists, 
+            Item = await _client.GetPlaylistAsync(id);
+            Collection = new ListTrackViewModel(
+                _client, TrackType.Playlist, 
                 id: Item.Id);
             Collection.CollectionChanged += CollectionChanged;
             Loading = true;
@@ -48,18 +68,18 @@ namespace Spotify.Uwp.Showcase.ViewModels
 
         #region Public Properties
         /// <summary>
-        /// Category View Model
+        /// Playlist View Model
         /// </summary>
-        public CategoryViewModel Item
+        public PlaylistViewModel Item
         {
             get => _item;
             set { _item = value; NotifyPropertyChanged(); }
         }
 
         /// <summary>
-        /// Observable Collection of Playlist View Model
+        /// Observable Collection of Track View Model
         /// </summary>
-        public ObservableCollection<PlaylistViewModel> Collection
+        public ObservableCollection<TrackViewModel> Collection
         {
             get => _collection;
             set { _collection = value; NotifyPropertyChanged(); }
@@ -85,10 +105,18 @@ namespace Spotify.Uwp.Showcase.ViewModels
             object sender,
             NotifyCollectionChangedEventArgs e)
         {
-            foreach (PlaylistViewModel item in e.NewItems)
+            foreach (TrackViewModel item in e.NewItems)
             {
                 if (item != null && item.Command == null)
-                    item.Command = new RelayCommand(PlaylistCommand);
+                {
+                    item.Command = new RelayCommand(TrackCommand);
+                    foreach (ArtistViewModel subitem in item?.Artists?.Items)
+                    {
+                        subitem.Command = new RelayCommand(ArtistCommand);
+                    }
+                    if (item.Album != null)
+                        item.Album.Command = new RelayCommand(AlbumCommand);
+                }
             }
             Loading = false;
         }
@@ -97,7 +125,8 @@ namespace Spotify.Uwp.Showcase.ViewModels
         #region Constructor
         /// <summary>Constructor</summary>
         /// <param name="client">Music Client</param>
-        public CategoryPageViewModel(
+        /// <param name="id">Id</param>
+        public UserPlaylistPageViewModel(
             ISpotifySdkClient client,
             string id)
         {

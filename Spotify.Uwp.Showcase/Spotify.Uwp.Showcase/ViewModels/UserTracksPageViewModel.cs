@@ -8,16 +8,18 @@ using Windows.UI.Xaml.Controls;
 namespace Spotify.Uwp.Showcase.ViewModels
 {
     /// <summary>
-    /// Album Page View Model
+    /// User Tracks Page View Model
     /// </summary>
-    public class AlbumPageViewModel : BasePageViewModel, IDisposable
+    public class UserTracksPageViewModel : BasePageViewModel, IDisposable
     {
         #region Private Members
-        private bool _loading;
+        private bool _loadingRecent;
+        private bool _loadingSaved;
+        private bool _loadingTop;
         private ISpotifySdkClient _client = null;
-        private AlbumViewModel _item = null;
-        private ObservableCollection<TrackViewModel> _collection = null;
-        private ToggleFavouriteViewModel _toggleFavourite = null;
+        private ObservableCollection<TrackViewModel> _recent = null;
+        private ObservableCollection<TrackViewModel> _saved = null;
+        private ObservableCollection<TrackViewModel> _top = null;
         private readonly MainPage _main = (MainPage)((Frame)Window.Current.Content).Content;
         #endregion Private Members
 
@@ -53,83 +55,92 @@ namespace Spotify.Uwp.Showcase.ViewModels
         }
 
         /// <summary>
-        /// Toggle Favourite Command
+        /// Get Recent
         /// </summary>
-        /// <param name="parameter"></param>
-        private void ToggleFavouriteCommand(object parameter)
+        private void GetRecent()
         {
-            var item = (ToggleFavouriteViewModel)parameter;
-            ToggleFavourite.Value = 
-                _client.Favourites.Toggle(FavouriteType.Album, item.Id, item.Value);
+            Recent = new ListTrackViewModel(
+                _client, TrackType.UserRecentlyPlayed);
+            Recent.CollectionChanged += CollectionChanged;
+            LoadingRecent = true;
         }
 
         /// <summary>
-        /// Get
+        /// Get Saved
         /// </summary>
-        /// <param name="id">Id</param>
-        private async void Get(string id)
+        private void GetSaved()
         {
-            Set(id);
-            Item = await _client.GetAlbumAsync(id);
-            if(Item?.Artist != null)
-                Item.Artist.Command = new RelayCommand(ArtistCommand);
-            Collection = new ListTrackViewModel(
-                _client, TrackType.Album,
-                id: id);
-            Collection.CollectionChanged += CollectionChanged;
-            Loading = true;
+            Saved = new ListTrackViewModel(
+                _client, TrackType.UserSaved);
+            Saved.CollectionChanged += CollectionChanged;
+            LoadingSaved = true;
         }
 
         /// <summary>
-        /// Set
+        /// Get Top
         /// </summary>
-        /// <param name="id">Id</param>
-        private void Set(string id)
+        private void GetTop()
         {
-            ToggleFavourite = new ToggleFavouriteViewModel()
-            {
-                Id = id,
-                Value = _client.Favourites.Contains(FavouriteType.Album, id),
-                Command = new RelayCommand(ToggleFavouriteCommand)
-            };
+            Top = new ListTrackViewModel(
+                _client, TrackType.UserTop);
+            Top.CollectionChanged += CollectionChanged;
+            LoadingTop = true;
         }
         #endregion Private Methods
 
         #region Public Properties
         /// <summary>
-        /// Album View Model
+        /// Observable Collection of Track View Model
         /// </summary>
-        public AlbumViewModel Item
+        public ObservableCollection<TrackViewModel> Recent
         {
-            get => _item;
-            set { _item = value; NotifyPropertyChanged(); }
+            get => _recent;
+            set { _recent = value; NotifyPropertyChanged(); }
         }
 
         /// <summary>
         /// Observable Collection of Track View Model
         /// </summary>
-        public ObservableCollection<TrackViewModel> Collection
+        public ObservableCollection<TrackViewModel> Saved
         {
-            get => _collection;
-            set { _collection = value; NotifyPropertyChanged(); }
+            get => _saved;
+            set { _saved = value; NotifyPropertyChanged(); }
         }
 
         /// <summary>
-        /// Loading Indicator
+        /// Observable Collection of Track View Model
         /// </summary>
-        public bool Loading
+        public ObservableCollection<TrackViewModel> Top
         {
-            get => _loading;
-            set { _loading = value; NotifyPropertyChanged(); }
+            get => _top;
+            set { _top = value; NotifyPropertyChanged(); }
         }
 
         /// <summary>
-        /// Toggle Favourite View Model
+        /// Loading Recent Tracks Indicator
         /// </summary>
-        public ToggleFavouriteViewModel ToggleFavourite
+        public bool LoadingRecent
         {
-            get => _toggleFavourite;
-            set { _toggleFavourite = value; NotifyPropertyChanged(); }
+            get => _loadingRecent;
+            set { _loadingRecent = value; NotifyPropertyChanged(); }
+        }
+
+        /// <summary>
+        /// Loading Saved Tracks Indicator
+        /// </summary>
+        public bool LoadingSaved
+        {
+            get => _loadingSaved;
+            set { _loadingSaved = value; NotifyPropertyChanged(); }
+        }
+
+        /// <summary>
+        /// Loading Top Tracks Indicator
+        /// </summary>
+        public bool LoadingTop
+        {
+            get => _loadingTop;
+            set { _loadingTop = value; NotifyPropertyChanged(); }
         }
         #endregion Public Properties
 
@@ -159,20 +170,22 @@ namespace Spotify.Uwp.Showcase.ViewModels
                         item.Album.Command = new RelayCommand(AlbumCommand);
                 }
             }
-            Loading = false;
+            LoadingRecent = false;
+            LoadingSaved = false;
+            LoadingTop = false;
         }
         #endregion Event Handlers
 
         #region Constructor
         /// <summary>Constructor</summary>
         /// <param name="client">Music Client</param>
-        /// <param name="id">Id</param>
-        public AlbumPageViewModel(
-            ISpotifySdkClient client,
-            string id)
+        public UserTracksPageViewModel(
+            ISpotifySdkClient client)
         {
             _client = client;
-            Get(id);
+            GetRecent();
+            GetSaved();
+            GetTop();
         }
         #endregion Constructor
 

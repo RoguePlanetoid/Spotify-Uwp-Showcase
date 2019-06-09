@@ -8,66 +8,56 @@ using Windows.UI.Xaml.Controls;
 namespace Spotify.Uwp.Showcase.ViewModels
 {
     /// <summary>
-    /// Category Page View Model
+    /// User Albums Page View Model
     /// </summary>
-    public class CategoryPageViewModel : BasePageViewModel, IDisposable
+    public class UserAlbumsPageViewModel : BasePageViewModel, IDisposable
     {
         #region Private Members
         private bool _loading;
         private ISpotifySdkClient _client = null;
-        private CategoryViewModel _item = null;
-        private ObservableCollection<PlaylistViewModel> _collection = null;
+        private ObservableCollection<AlbumViewModel> _collection = null;
         private readonly MainPage _main = (MainPage)((Frame)Window.Current.Content).Content;
         #endregion Private Members
 
         #region Private Methods
         /// <summary>
-        /// Playlist Command
+        /// Album Command
         /// </summary>
         /// <param name="parameter">Parameter</param>
-        private void PlaylistCommand(object parameter)
+        private void AlbumCommand(object parameter)
         {
-            var item = (PlaylistViewModel)parameter;
-            _main.Item.Navigate("playlist", item.Id, item.Name);
+            var item = (AlbumViewModel)parameter;
+            _main.Item.Navigate("album", item.Id, item.Name);
+        }
+
+        /// <summary>
+        /// Artist Command
+        /// </summary>
+        /// <param name="parameter">Parameter</param>
+        private void ArtistCommand(object parameter)
+        {
+            var item = (ArtistViewModel)parameter;
+            _main.Item.Navigate("artist", item.Id, item.Name);
         }
 
         /// <summary>
         /// Get
         /// </summary>
-        /// <param name="id">Id</param>
-        private async void Get(string id)
+        private void Get()
         {
-            Item = await _client.GetCategoryAsync(id);
-            Collection = new ListPlaylistViewModel(
-                _client, PlaylistType.CategoriesPlaylists, 
-                id: Item.Id);
+            Collection = new ListAlbumViewModel(_client, AlbumType.UserSaved);
             Collection.CollectionChanged += CollectionChanged;
             Loading = true;
         }
         #endregion Private Methods
 
         #region Public Properties
-        /// <summary>
-        /// Category View Model
-        /// </summary>
-        public CategoryViewModel Item
-        {
-            get => _item;
-            set { _item = value; NotifyPropertyChanged(); }
-        }
-
-        /// <summary>
-        /// Observable Collection of Playlist View Model
-        /// </summary>
-        public ObservableCollection<PlaylistViewModel> Collection
+        public ObservableCollection<AlbumViewModel> Collection
         {
             get => _collection;
             set { _collection = value; NotifyPropertyChanged(); }
         }
 
-        /// <summary>
-        /// Loading Indicator
-        /// </summary>
         public bool Loading
         {
             get => _loading;
@@ -85,10 +75,19 @@ namespace Spotify.Uwp.Showcase.ViewModels
             object sender,
             NotifyCollectionChangedEventArgs e)
         {
-            foreach (PlaylistViewModel item in e.NewItems)
+            foreach (AlbumViewModel item in e.NewItems)
             {
                 if (item != null && item.Command == null)
-                    item.Command = new RelayCommand(PlaylistCommand);
+                {
+                    item.Command = new RelayCommand(AlbumCommand);
+                    if (item.Artists?.Items != null)
+                    {
+                        foreach (ArtistViewModel subitem in item.Artists.Items)
+                        {
+                            subitem.Command = new RelayCommand(ArtistCommand);
+                        }
+                    }
+                }
             }
             Loading = false;
         }
@@ -97,12 +96,11 @@ namespace Spotify.Uwp.Showcase.ViewModels
         #region Constructor
         /// <summary>Constructor</summary>
         /// <param name="client">Music Client</param>
-        public CategoryPageViewModel(
-            ISpotifySdkClient client,
-            string id)
+        public UserAlbumsPageViewModel(
+            ISpotifySdkClient client)
         {
             _client = client;
-            Get(id);
+            Get();
         }
         #endregion Constructor
 
