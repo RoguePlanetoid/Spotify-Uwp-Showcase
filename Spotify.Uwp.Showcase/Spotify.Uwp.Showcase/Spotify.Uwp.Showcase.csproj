@@ -346,7 +346,7 @@
       <Version>6.2.8</Version>
     </PackageReference>
     <PackageReference Include="Spotify.Uwp">
-      <Version>0.7.5</Version>
+      <Version>0.7.6</Version>
     </PackageReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
