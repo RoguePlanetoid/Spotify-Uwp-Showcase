@@ -209,6 +209,7 @@
       <SubType>Designer</SubType>
     </AppxManifest>
     <Content Include="appsettings.json" />
+    <None Include="appsettings.example.json" />
     <None Include="Spotify.Uwp.Showcase_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
