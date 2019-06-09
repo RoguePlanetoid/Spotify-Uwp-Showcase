@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Spotify.Uwp.Showcase.Classes;
+using System;
 
 namespace Spotify.Uwp.Showcase
 {
@@ -25,11 +26,16 @@ namespace Spotify.Uwp.Showcase
         private static volatile SpotifySdk instance;
         private static object syncRoot = new object();
 
+        /// <summary>
+        /// Init
+        /// </summary>
         private async void Init()
         {
             _config = await Configuration.GetConfig();
             SpotifySdkClient = SpotifySdkClientFactory.CreateSpotifySdkClient(
-            _config["client_id"], _config["client_secret"]);
+                clientId: _config["client_id"], 
+                loginRedirectUri: new Uri(_config["redirect_uri"]),
+                loginState: _config["state"]);
         } 
 
         /// <summary>Constructor</summary>

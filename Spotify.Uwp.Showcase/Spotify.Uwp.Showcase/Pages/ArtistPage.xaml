@@ -20,7 +20,7 @@
             <PivotItem Header="Albums">
                 <Grid>
                     <GridView Margin="5" ItemsSource="{Binding Albums}"
-                    HorizontalAlignment="Left" VerticalAlignment="Top"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                     ItemTemplate="{StaticResource AlbumItemTemplate}"/>
                     <ProgressRing IsActive="{Binding LoadingAlbums}"
                     HorizontalAlignment="Center" VerticalAlignment="Center" 
@@ -43,7 +43,7 @@
             <PivotItem Header="Related Artists">
                 <Grid>
                     <GridView Margin="5" ItemsSource="{Binding Artists}"
-                    HorizontalAlignment="Left" VerticalAlignment="Top"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                     ItemTemplate="{StaticResource ArtistItemTemplate}"/>
                     <ProgressRing IsActive="{Binding LoadingArtists}"
                     HorizontalAlignment="Center" VerticalAlignment="Center" 

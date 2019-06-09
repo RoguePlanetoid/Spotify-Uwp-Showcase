@@ -121,6 +121,7 @@
     </Compile>
     <Compile Include="Classes\BooleanToVisibilityConverter.cs" />
     <Compile Include="Classes\Chart.cs" />
+    <Compile Include="Classes\Dialog.cs" />
     <Compile Include="Classes\FileInfo.cs" />
     <Compile Include="Classes\Configuration.cs" />
     <Compile Include="Classes\FileProvider.cs" />
@@ -148,6 +149,12 @@
     <Compile Include="Pages\FeaturedPage.xaml.cs">
       <DependentUpon>FeaturedPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\UserPlaylistPage.xaml.cs">
+      <DependentUpon>UserPlaylistPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\UserArtistsPage.xaml.cs">
+      <DependentUpon>UserArtistsPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\NewReleasesPage.xaml.cs">
       <DependentUpon>NewReleasesPage.xaml</DependentUpon>
     </Compile>
@@ -160,27 +167,42 @@
     <Compile Include="Pages\RecommendedPage.xaml.cs">
       <DependentUpon>RecommendedPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\UserAlbumsPage.xaml.cs">
+      <DependentUpon>UserAlbumsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\UserTracksPage.xaml.cs">
+      <DependentUpon>UserTracksPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\SearchPage.xaml.cs">
       <DependentUpon>SearchPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\TrackPage.xaml.cs">
       <DependentUpon>TrackPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\UserPlaylistsPage.xaml.cs">
+      <DependentUpon>UserPlaylistsPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\AlbumPageViewModel.cs" />
     <Compile Include="ViewModels\AppViewModel.cs" />
     <Compile Include="ViewModels\ArtistPageViewModel.cs" />
+    <Compile Include="ViewModels\BasePageViewModel.cs" />
     <Compile Include="ViewModels\CategoriesPageViewModel.cs" />
     <Compile Include="ViewModels\CategoryPageViewModel.cs" />
     <Compile Include="ViewModels\FavouritesPageViewModel.cs" />
     <Compile Include="ViewModels\FeaturedPageViewModel.cs" />
     <Compile Include="ViewModels\MainPageViewModel.cs" />
+    <Compile Include="ViewModels\UserPlaylistPageViewModel.cs" />
+    <Compile Include="ViewModels\UserAlbumsPageViewModel.cs" />
     <Compile Include="ViewModels\NewReleasesPageViewModel.cs" />
     <Compile Include="ViewModels\PlaylistPageViewModel.cs" />
     <Compile Include="ViewModels\RecommendationPageViewModel.cs" />
     <Compile Include="ViewModels\RecommendedPageViewModel.cs" />
     <Compile Include="ViewModels\SearchPageViewModel.cs" />
     <Compile Include="ViewModels\TrackPageViewModel.cs" />
+    <Compile Include="ViewModels\UserPlaylistsPageViewModel.cs" />
+    <Compile Include="ViewModels\UserArtistsPageViewModel.cs" />
+    <Compile Include="ViewModels\UserTracksPageViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -271,6 +293,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Pages\UserPlaylistPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\UserArtistsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\NewReleasesPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -287,6 +317,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Pages\UserAlbumsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\UserTracksPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\SearchPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -294,6 +332,10 @@
     <Page Include="Pages\TrackPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\UserPlaylistsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
@@ -304,7 +346,7 @@
       <Version>6.2.8</Version>
     </PackageReference>
     <PackageReference Include="Spotify.Uwp">
-      <Version>0.5.0</Version>
+      <Version>0.7.5</Version>
     </PackageReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

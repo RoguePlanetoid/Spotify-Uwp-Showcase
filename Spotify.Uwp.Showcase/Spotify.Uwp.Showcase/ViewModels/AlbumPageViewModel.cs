@@ -2,8 +2,6 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -12,7 +10,7 @@ namespace Spotify.Uwp.Showcase.ViewModels
     /// <summary>
     /// Album Page View Model
     /// </summary>
-    public class AlbumPageViewModel : INotifyPropertyChanged, IDisposable
+    public class AlbumPageViewModel : BasePageViewModel, IDisposable
     {
         #region Private Members
         private bool _loading;
@@ -22,10 +20,6 @@ namespace Spotify.Uwp.Showcase.ViewModels
         private ToggleFavouriteViewModel _toggleFavourite = null;
         private readonly MainPage _main = (MainPage)((Frame)Window.Current.Content).Content;
         #endregion Private Members
-
-        #region Public Events
-        public event PropertyChangedEventHandler PropertyChanged;
-        #endregion Public Events
 
         #region Private Methods
         /// <summary>
@@ -72,7 +66,7 @@ namespace Spotify.Uwp.Showcase.ViewModels
         /// <summary>
         /// Get
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">Id</param>
         private async void Get(string id)
         {
             Set(id);
@@ -89,7 +83,7 @@ namespace Spotify.Uwp.Showcase.ViewModels
         /// <summary>
         /// Set
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">Id</param>
         private void Set(string id)
         {
             ToggleFavourite = new ToggleFavouriteViewModel()
@@ -99,34 +93,39 @@ namespace Spotify.Uwp.Showcase.ViewModels
                 Command = new RelayCommand(ToggleFavouriteCommand)
             };
         }
-
-        /// <summary>
-        /// Notify Property Changed
-        /// </summary>
-        /// <param name="property"></param>
-        private void NotifyPropertyChanged([CallerMemberName] string property = "") =>
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
         #endregion Private Methods
 
         #region Public Properties
+        /// <summary>
+        /// Album View Model
+        /// </summary>
         public AlbumViewModel Item
         {
             get => _item;
             set { _item = value; NotifyPropertyChanged(); }
         }
 
+        /// <summary>
+        /// Observable Collection of Track View Model
+        /// </summary>
         public ObservableCollection<TrackViewModel> Collection
         {
             get => _collection;
             set { _collection = value; NotifyPropertyChanged(); }
         }
 
+        /// <summary>
+        /// Loading Indicator
+        /// </summary>
         public bool Loading
         {
             get => _loading;
             set { _loading = value; NotifyPropertyChanged(); }
         }
 
+        /// <summary>
+        /// Toggle Favourite View Model
+        /// </summary>
         public ToggleFavouriteViewModel ToggleFavourite
         {
             get => _toggleFavourite;
@@ -138,8 +137,8 @@ namespace Spotify.Uwp.Showcase.ViewModels
         /// <summary>
         /// Collection Changed
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">Object</param>
+        /// <param name="e">Event</param>
         private void CollectionChanged(
             object sender,
             NotifyCollectionChangedEventArgs e)
@@ -167,6 +166,7 @@ namespace Spotify.Uwp.Showcase.ViewModels
         #region Constructor
         /// <summary>Constructor</summary>
         /// <param name="client">Music Client</param>
+        /// <param name="id">Id</param>
         public AlbumPageViewModel(
             ISpotifySdkClient client,
             string id)

@@ -19,7 +19,7 @@
             <PivotItem Header="Features">
                 <Grid>
                     <GridView Margin="5" ItemsSource="{Binding Collection}"
-                    HorizontalAlignment="Left" VerticalAlignment="Top"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                     ItemTemplate="{StaticResource AudioFeatureTemplate}"/>
                 </Grid>
             </PivotItem>

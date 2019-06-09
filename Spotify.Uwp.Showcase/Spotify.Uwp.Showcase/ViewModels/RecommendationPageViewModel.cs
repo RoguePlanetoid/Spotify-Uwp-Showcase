@@ -2,14 +2,15 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace Spotify.Uwp.Showcase.ViewModels
 {
-    public class RecommendationPageViewModel : INotifyPropertyChanged, IDisposable
+    /// <summary>
+    /// Recommendation Page View Model
+    /// </summary>
+    public class RecommendationPageViewModel : BasePageViewModel, IDisposable
     {
         #region Private Members
         private bool _loading;
@@ -17,10 +18,6 @@ namespace Spotify.Uwp.Showcase.ViewModels
         private ObservableCollection<TrackViewModel> _collection = null;
         private readonly MainPage _main = (MainPage)((Frame)Window.Current.Content).Content;
         #endregion Private Members
-
-        #region Public Events
-        public event PropertyChangedEventHandler PropertyChanged;
-        #endregion Public Events
 
         #region Private Methods
         /// <summary>
@@ -36,31 +33,30 @@ namespace Spotify.Uwp.Showcase.ViewModels
         /// <summary>
         /// Get
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">Id</param>
         private void Get(string id)
         {
             Collection = new ListTrackViewModel(
                 SpotifySdk.Instance.SpotifySdkClient,
                 TrackType.Recommended, id);
-            Collection.CollectionChanged += GetCollectionChanged;
+            Collection.CollectionChanged += CollectionChanged;
             Loading = true;
         }
-
-        /// <summary>
-        /// Notify Property Changed
-        /// </summary>
-        /// <param name="property"></param>
-        private void NotifyPropertyChanged([CallerMemberName] string property = "") => 
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
         #endregion Private Methods
 
         #region Public Properties
+        /// <summary>
+        /// Observable Collection of Track View Model
+        /// </summary>
         public ObservableCollection<TrackViewModel> Collection
         {
             get => _collection;
             set { _collection = value; NotifyPropertyChanged(); }
         }
 
+        /// <summary>
+        /// Loading Indicator
+        /// </summary>
         public bool Loading
         {
             get => _loading;
@@ -74,7 +70,7 @@ namespace Spotify.Uwp.Showcase.ViewModels
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void GetCollectionChanged(
+        private void CollectionChanged(
             object sender,
             NotifyCollectionChangedEventArgs e)
         {
@@ -92,6 +88,7 @@ namespace Spotify.Uwp.Showcase.ViewModels
         #region Constructor
         /// <summary>Constructor</summary>
         /// <param name="client">Music Client</param>
+        /// <param name="id">Id</param>
         public RecommendationPageViewModel(
             ISpotifySdkClient client,
             string id)

@@ -2,8 +2,6 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -12,7 +10,7 @@ namespace Spotify.Uwp.Showcase.ViewModels
     /// <summary>
     /// Artist Page View Model
     /// </summary>
-    public class ArtistPageViewModel : INotifyPropertyChanged, IDisposable
+    public class ArtistPageViewModel : BasePageViewModel, IDisposable
     {
         #region Private Members
         private bool _loadingTracks;
@@ -26,10 +24,6 @@ namespace Spotify.Uwp.Showcase.ViewModels
         private ToggleFavouriteViewModel _toggleFavourite = null;
         private readonly MainPage _main = (MainPage)((Frame)Window.Current.Content).Content;
         #endregion Private Members
-
-        #region Public Events
-        public event PropertyChangedEventHandler PropertyChanged;
-        #endregion Public Events
 
         #region Private Methods
         /// <summary>
@@ -76,7 +70,7 @@ namespace Spotify.Uwp.Showcase.ViewModels
         /// <summary>
         /// Set
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">Id</param>
         private void Set(string id)
         {
             ToggleFavourite = new ToggleFavouriteViewModel()
@@ -88,9 +82,9 @@ namespace Spotify.Uwp.Showcase.ViewModels
         }
 
         /// <summary>
-        /// Get
+        /// Get Artist
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">Id</param>
         private async void Get(string id)
         {
             Set(id);
@@ -98,9 +92,9 @@ namespace Spotify.Uwp.Showcase.ViewModels
         }
 
         /// <summary>
-        /// Get
+        /// Get Tracks
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">Id</param>
         private void GetTracks(string id)
         {
             Tracks = new ListTrackViewModel(
@@ -111,9 +105,9 @@ namespace Spotify.Uwp.Showcase.ViewModels
         }
 
         /// <summary>
-        /// Get
+        /// Get Albums
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">Id</param>
         private void GetAlbums(string id)
         {
             Albums = new ListAlbumViewModel(
@@ -124,9 +118,9 @@ namespace Spotify.Uwp.Showcase.ViewModels
         }
 
         /// <summary>
-        /// Get
+        /// Get Artists
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">Id</param>
         private void GetArtists(string id)
         {
             Artists = new ListArtistViewModel(
@@ -135,58 +129,75 @@ namespace Spotify.Uwp.Showcase.ViewModels
             Artists.CollectionChanged += ArtistsCollectionChanged;
             LoadingArtists = true;
         }
-
-        /// <summary>
-        /// Notify Property Changed
-        /// </summary>
-        /// <param name="property"></param>
-        private void NotifyPropertyChanged([CallerMemberName] string property = "") =>
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
         #endregion Private Methods
 
         #region Public Properties
+        /// <summary>
+        /// Artist View Model
+        /// </summary>
         public ArtistViewModel Item
         {
             get => _item;
             set { _item = value; NotifyPropertyChanged(); }
         }
 
+        /// <summary>
+        /// Observable Collection of Track View Model
+        /// </summary>
         public ObservableCollection<TrackViewModel> Tracks
         {
             get => _tracks;
             set { _tracks = value; NotifyPropertyChanged(); }
         }
 
+        /// <summary>
+        /// Observable Collection of Artist View Model
+        /// </summary>
         public ObservableCollection<ArtistViewModel> Artists
         {
             get => _artists;
             set { _artists = value; NotifyPropertyChanged(); }
         }
 
+        /// <summary>
+        /// Observable Collection of Album View Model
+        /// </summary>
         public ObservableCollection<AlbumViewModel> Albums
         {
             get => _albums;
             set { _albums = value; NotifyPropertyChanged(); }
         }
 
+        /// <summary>
+        /// Loading Tracks Indicator
+        /// </summary>
         public bool LoadingTracks
         {
             get => _loadingTracks;
             set { _loadingTracks = value; NotifyPropertyChanged(); }
         }
 
+        /// <summary>
+        /// Loading Artists Indicator
+        /// </summary>
         public bool LoadingArtists
         {
             get => _loadingArtists;
             set { _loadingArtists = value; NotifyPropertyChanged(); }
         }
 
+        /// <summary>
+        /// Loading Albums Indicator
+        /// </summary>
         public bool LoadingAlbums
         {
             get => _loadingAlbums;
             set { _loadingAlbums = value; NotifyPropertyChanged(); }
         }
 
+        /// <summary>
+        /// Toggle Favourite View Model
+        /// </summary>
         public ToggleFavouriteViewModel ToggleFavourite
         {
             get => _toggleFavourite;
@@ -196,7 +207,7 @@ namespace Spotify.Uwp.Showcase.ViewModels
 
         #region Event Handlers
         /// <summary>
-        /// Collection Changed
+        /// Tracks Collection Changed
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -213,7 +224,7 @@ namespace Spotify.Uwp.Showcase.ViewModels
         }
 
         /// <summary>
-        /// Collection Changed
+        /// Albums Collection Changed
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -236,7 +247,7 @@ namespace Spotify.Uwp.Showcase.ViewModels
         }
 
         /// <summary>
-        /// Collection Changed
+        /// Artists Collection Changed
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -256,6 +267,7 @@ namespace Spotify.Uwp.Showcase.ViewModels
         #region Constructor
         /// <summary>Constructor</summary>
         /// <param name="client">Music Client</param>
+        /// <param name="id">Id</param>
         public ArtistPageViewModel(
             ISpotifySdkClient client,
             string id)

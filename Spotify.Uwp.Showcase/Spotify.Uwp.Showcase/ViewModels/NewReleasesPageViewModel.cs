@@ -2,8 +2,6 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -12,7 +10,7 @@ namespace Spotify.Uwp.Showcase.ViewModels
     /// <summary>
     /// New Releases Page View Model
     /// </summary>
-    public class NewReleasesPageViewModel : INotifyPropertyChanged, IDisposable
+    public class NewReleasesPageViewModel : BasePageViewModel, IDisposable
     {
         #region Private Members
         private bool _loading;
@@ -20,10 +18,6 @@ namespace Spotify.Uwp.Showcase.ViewModels
         private ObservableCollection<AlbumViewModel> _collection = null;
         private readonly MainPage _main = (MainPage)((Frame)Window.Current.Content).Content;
         #endregion Private Members
-
-        #region Public Events
-        public event PropertyChangedEventHandler PropertyChanged;
-        #endregion Public Events
 
         #region Private Methods
         /// <summary>
@@ -49,31 +43,27 @@ namespace Spotify.Uwp.Showcase.ViewModels
         /// <summary>
         /// Get
         /// </summary>
-        /// <param name="id"></param>
         private void Get()
         {
-            Collection = new ListAlbumViewModel(
-                SpotifySdk.Instance.SpotifySdkClient,
-                AlbumType.NewReleases, null);
+            Collection = new ListAlbumViewModel(_client, AlbumType.NewReleases);
             Collection.CollectionChanged += CollectionChanged;
             Loading = true;
         }
-
-        /// <summary>
-        /// Notify Property Changed
-        /// </summary>
-        /// <param name="property"></param>
-        private void NotifyPropertyChanged([CallerMemberName] string property = "") => 
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
         #endregion Private Methods
 
         #region Public Properties
+        /// <summary>
+        /// Observable Collection of Album View Model
+        /// </summary>
         public ObservableCollection<AlbumViewModel> Collection
         {
             get => _collection;
             set { _collection = value; NotifyPropertyChanged(); }
         }
 
+        /// <summary>
+        /// Loading Indicator
+        /// </summary>
         public bool Loading
         {
             get => _loading;
@@ -96,7 +86,7 @@ namespace Spotify.Uwp.Showcase.ViewModels
                 if (item != null && item.Command == null)
                 {
                     item.Command = new RelayCommand(AlbumCommand);
-                    if (item.Artists?.Items != null)
+                    if (item?.Artists?.Items != null)
                     {
                         foreach (ArtistViewModel subitem in item.Artists.Items)
                         {

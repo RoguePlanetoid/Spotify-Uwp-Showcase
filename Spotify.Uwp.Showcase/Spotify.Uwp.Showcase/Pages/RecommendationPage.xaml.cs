@@ -32,6 +32,5 @@ namespace Spotify.Uwp.Showcase.Pages
         public void Dispose() =>
             this.DataContext = null;
         #endregion Public Methods
-
     }
 }

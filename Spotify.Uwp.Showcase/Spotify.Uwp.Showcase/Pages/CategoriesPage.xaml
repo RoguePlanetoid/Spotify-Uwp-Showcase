@@ -8,8 +8,8 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <Grid>
-        <GridView Name="Items" Margin="5" ItemsSource="{Binding Collection}"
-        HorizontalAlignment="Left" VerticalAlignment="Top"
+        <GridView Margin="5" ItemsSource="{Binding Collection}"
+        HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
         ItemTemplate="{StaticResource CategoryItemTemplate}"/>
         <ProgressRing IsActive="{Binding Loading}"
         HorizontalAlignment="Center" VerticalAlignment="Center" 

@@ -8,6 +8,9 @@ using Windows.Storage;
 
 namespace Spotify.Uwp.Showcase.ViewModels
 {
+    /// <summary>
+    /// App View Model
+    /// </summary>
     public class AppViewModel
     {
         #region Private Constants
@@ -114,11 +117,13 @@ namespace Spotify.Uwp.Showcase.ViewModels
         /// </summary>
         public async void Start()
         {
-            _client.Token = 
-                await Load<TokenViewModel>(filename_token) ?? null;
-            _client.Favourites =
-                await Load<ListFavouriteViewModel>(filename_favourites) ?? null;
-            _client.Favourites = _client.Favourites ?? new ListFavouriteViewModel();
+            try
+            {
+                _client.Favourites =
+                    await Load<ListFavouriteViewModel>(filename_favourites) ?? null;
+                _client.Favourites = _client.Favourites ?? new ListFavouriteViewModel();
+            }
+            catch { }
         }
 
         /// <summary>
@@ -126,8 +131,11 @@ namespace Spotify.Uwp.Showcase.ViewModels
         /// </summary>
         public async void Finish()
         {
-            await Save(_client.Token, filename_token);
-            await Save(_client.Favourites, filename_favourites);
+            try
+            {
+                await Save(_client.Favourites, filename_favourites);
+            }
+            catch { }
         }
         #endregion Public Methods
     }

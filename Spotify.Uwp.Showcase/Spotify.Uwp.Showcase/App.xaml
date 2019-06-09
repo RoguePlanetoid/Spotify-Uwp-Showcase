@@ -113,7 +113,7 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <Image Grid.Column="0" Height="32" Width="32" 
-                    Source="{Binding Small.Url}" Margin="5"/>
+                    Source="{Binding Album.Small.Url}" Margin="5"/>
                 <HyperlinkButton Grid.Column="1" VerticalAlignment="Center"
                     Content="{Binding Name}"
                     Command="{Binding Command}"

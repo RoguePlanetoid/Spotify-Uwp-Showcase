@@ -6,13 +6,14 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" 
+    Loaded="Page_Loaded">
     <Grid>
-        <NavigationView Name="Navigation"
-            Loaded="{x:Bind Item.Loaded}"
+        <NavigationView Name="Navigation" Visibility="Collapsed"
+            Loaded="{x:Bind Item.NavigationLoaded}"
             ItemInvoked="{x:Bind Item.ItemInvoked}" 
-            BackRequested="Navigation_BackRequested">
+            BackRequested="Navigation_BackRequested"
+            IsSettingsVisible="False">
             <NavigationView.AutoSuggestBox>
                 <AutoSuggestBox x:Name="Search" QueryIcon="Find" QuerySubmitted="{x:Bind Item.QuerySubmitted}"/>
             </NavigationView.AutoSuggestBox>
@@ -49,10 +50,56 @@
                         <FontIcon Glyph="&#xE209;" FontFamily="Segoe MDL2 Assets"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
+
+                <NavigationViewItemSeparator/>
+                <NavigationViewItemHeader Content="Library"/>
+
+                <NavigationViewItem Tag="usertracks" Content="Songs">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE189;" FontFamily="Segoe MDL2 Assets"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+
+                <NavigationViewItem Tag="useralbums" Content="Albums">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE93C;" FontFamily="Segoe MDL2 Assets"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+
+                <NavigationViewItem Tag="userartists" Content="Artists">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE13D;" FontFamily="Segoe MDL2 Assets"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+
+                <NavigationViewItem Tag="userplaylists" Content="Playlists">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE142;" FontFamily="Segoe MDL2 Assets"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
             </NavigationView.MenuItems>
-            <ScrollViewer>
-                <Frame x:Name="ContentFrame" IsTabStop="True" Navigated="{x:Bind Item.Navigated}"/>
-            </ScrollViewer>
+            <Frame x:Name="ContentFrame" IsTabStop="True" Navigated="{x:Bind Item.Navigated}"/>
+            <NavigationView.PaneFooter>
+                <NavigationViewItem>
+                    <NavigationViewItem.Content>
+                        <StackPanel Orientation="Horizontal">
+                            <Ellipse Width="20" Height="20">
+                                <Ellipse.Fill>
+                                    <ImageBrush ImageSource="{Binding CurrentUser.Large.Url}"/>
+                                </Ellipse.Fill>
+                            </Ellipse>
+                            <TextBlock Margin="20,0,0,0" Text="{Binding CurrentUser.DisplayName}"/>
+                        </StackPanel>
+                    </NavigationViewItem.Content>
+                </NavigationViewItem>
+            </NavigationView.PaneFooter>
         </NavigationView>
+        <WebView Name="WebView"
+        NavigationStarting="WebView_NavigationStarting"
+        NavigationCompleted="WebView_NavigationCompleted"/>
+        <ProgressRing IsActive="{Binding Loading}"
+        HorizontalAlignment="Center" VerticalAlignment="Center" 
+        Height="64" Width="64" Visibility="{Binding Loading, 
+        Converter={StaticResource BooleanToVisibilityConverter}}"/>
     </Grid>
 </Page>

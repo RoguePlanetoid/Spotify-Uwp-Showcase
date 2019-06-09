@@ -2,8 +2,6 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -12,7 +10,7 @@ namespace Spotify.Uwp.Showcase.ViewModels
     /// <summary>
     /// Featured Page View Model
     /// </summary>
-    public class FeaturedPageViewModel : INotifyPropertyChanged, IDisposable
+    public class FeaturedPageViewModel : BasePageViewModel, IDisposable
     {
         #region Private Members
         private bool _loading;
@@ -21,16 +19,12 @@ namespace Spotify.Uwp.Showcase.ViewModels
         private readonly MainPage _main = (MainPage)((Frame)Window.Current.Content).Content;
         #endregion Private Members
 
-        #region Public Events
-        public event PropertyChangedEventHandler PropertyChanged;
-        #endregion Public Events
-
         #region Private Methods
         /// <summary>
-        /// Command
+        /// Playlist Command
         /// </summary>
         /// <param name="parameter">Parameter</param>
-        private void Command(object parameter)
+        private void PlaylistCommand(object parameter)
         {
             var item = (PlaylistViewModel)parameter;
             _main.Item.Navigate("playlist", item.Id, item.Name);
@@ -39,30 +33,27 @@ namespace Spotify.Uwp.Showcase.ViewModels
         /// <summary>
         /// Get
         /// </summary>
-        /// <param name="id"></param>
-        private void Get(int? limit)
+        private void Get()
         {
-            Collection = new ListPlaylistViewModel(
-                _client, PlaylistType.Featured, null);
+            Collection = new ListPlaylistViewModel(_client, PlaylistType.Featured);
             Collection.CollectionChanged += CollectionChanged;
             Loading = true;
         }
-
-        /// <summary>
-        /// Notify Property Changed
-        /// </summary>
-        /// <param name="property"></param>
-        private void NotifyPropertyChanged([CallerMemberName] string property = "") => 
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
         #endregion Private Methods
 
         #region Public Properties
+        /// <summary>
+        /// Observable Collection of Playlist View Model
+        /// </summary>
         public ObservableCollection<PlaylistViewModel> Collection
         {
             get => _collection;
             set { _collection = value; NotifyPropertyChanged(); }
         }
 
+        /// <summary>
+        /// Loading Indicator
+        /// </summary>
         public bool Loading
         {
             get => _loading;
@@ -83,7 +74,7 @@ namespace Spotify.Uwp.Showcase.ViewModels
             foreach (PlaylistViewModel item in e.NewItems)
             {
                 if (item != null && item.Command == null)
-                    item.Command = new RelayCommand(Command);
+                    item.Command = new RelayCommand(PlaylistCommand);
             }
             Loading = false;
         }
@@ -93,11 +84,10 @@ namespace Spotify.Uwp.Showcase.ViewModels
         /// <summary>Constructor</summary>
         /// <param name="client">Music Client</param>
         public FeaturedPageViewModel(
-            ISpotifySdkClient client,
-            int? limit = null)
+            ISpotifySdkClient client)
         {
             _client = client;
-            Get(limit);
+            Get();
         }
         #endregion Constructor
 
