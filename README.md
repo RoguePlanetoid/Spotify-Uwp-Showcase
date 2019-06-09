@@ -1,6 +1,6 @@
 # Spotify.Uwp.Showcase
 
-Spotify API .NET Standard Library Showcase App
+.NET Standard Library Extensions for Universal Windows Platform Showcase App
 
 ## Application
 
