@@ -14,7 +14,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <GridView Grid.Row="1" Margin="5" ItemsSource="{Binding Collection}"
-        HorizontalAlignment="Left" VerticalAlignment="Top"
+        HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
         ItemTemplate="{StaticResource RecommendedItemTemplate}"/>
         <ProgressRing Grid.Row="1" IsActive="{Binding Loading}"
         HorizontalAlignment="Center" VerticalAlignment="Center" 

@@ -13,7 +13,7 @@
             <PivotItem Header="Followed Artists">
                 <Grid>
                     <GridView Margin="5" ItemsSource="{Binding Followed}"
-                    HorizontalAlignment="Left" VerticalAlignment="Top"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                     ItemTemplate="{StaticResource ArtistItemTemplate}"/>
                     <ProgressRing IsActive="{Binding LoadingFollowed}"
                     HorizontalAlignment="Center" VerticalAlignment="Center" 
@@ -24,7 +24,7 @@
             <PivotItem Header="Top Artists">
                 <Grid>
                     <GridView Margin="5" ItemsSource="{Binding Top}"
-                    HorizontalAlignment="Left" VerticalAlignment="Top"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                     ItemTemplate="{StaticResource ArtistItemTemplate}"/>
                     <ProgressRing IsActive="{Binding LoadingTop}"
                     HorizontalAlignment="Center" VerticalAlignment="Center" 
