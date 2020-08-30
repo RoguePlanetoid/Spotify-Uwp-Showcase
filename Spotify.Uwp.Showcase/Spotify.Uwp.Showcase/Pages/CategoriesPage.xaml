@@ -2,18 +2,23 @@
     x:Class="Spotify.Uwp.Showcase.Pages.CategoriesPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:Spotify.Uwp.Showcase.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    mc:Ignorable="d">
     <Grid>
-        <GridView Margin="5" ItemsSource="{Binding Collection}"
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Style="{StaticResource TitleTextBlockStyle}" Margin="14,0,0,0" Text="Categories" />
+        
+        <GridView Grid.Row="1" Margin="5" ItemsSource="{Binding Categories.Collection}"
         HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
         ItemTemplate="{StaticResource CategoryItemTemplate}"/>
-        <ProgressRing IsActive="{Binding Loading}"
+        
+        <ProgressRing Grid.Row="1" IsActive="{Binding Categories.Loading}"
         HorizontalAlignment="Center" VerticalAlignment="Center" 
-        Height="64" Width="64" Visibility="{Binding Loading, 
+        Height="64" Width="64" Visibility="{Binding Categories.Loading, 
         Converter={StaticResource BooleanToVisibilityConverter}}"/>
     </Grid>
 </Page>

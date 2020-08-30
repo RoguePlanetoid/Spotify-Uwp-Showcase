@@ -1,0 +1,56 @@
+﻿<Page
+    x:Class="Spotify.Uwp.Showcase.Pages.TracksPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Style="{StaticResource TitleTextBlockStyle}" Margin="12,0,0,0" Text="Songs" />
+        <Pivot Grid.Row="1">
+            <PivotItem Header="Saved Songs">
+                <Grid>
+                    <ListView Margin="5" ItemsSource="{Binding Saved.Collection}"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                    ItemTemplate="{StaticResource TrackItemTemplate}" 
+                    ItemContainerStyle="{StaticResource ListViewStyle}"/>
+                    
+                    <ProgressRing IsActive="{Binding Saved.Loading}"
+                    HorizontalAlignment="Center" VerticalAlignment="Center" 
+                    Height="64" Width="64" Visibility="{Binding Saved.Loading, 
+                    Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                </Grid>
+            </PivotItem>
+            <PivotItem Header="Top Songs">
+                <Grid>
+                    <ListView Margin="5" ItemsSource="{Binding Top.Collection}"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                    ItemTemplate="{StaticResource TrackItemTemplate}" 
+                    ItemContainerStyle="{StaticResource ListViewStyle}"/>
+                    
+                    <ProgressRing IsActive="{Binding Top.Loading}"
+                    HorizontalAlignment="Center" VerticalAlignment="Center" 
+                    Height="64" Width="64" Visibility="{Binding Top.Loading, 
+                    Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                </Grid>
+            </PivotItem>
+            <PivotItem Header="Recently Played">
+                <Grid>
+                    <ListView Margin="5" ItemsSource="{Binding Recent.Collection}"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                    ItemTemplate="{StaticResource TrackItemTemplate}" 
+                    ItemContainerStyle="{StaticResource ListViewStyle}"/>
+                    
+                    <ProgressRing IsActive="{Binding Recent.Loading}"
+                    HorizontalAlignment="Center" VerticalAlignment="Center" 
+                    Height="64" Width="64" Visibility="{Binding Recent.Loading, 
+                    Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                </Grid>
+            </PivotItem>
+        </Pivot>
+    </Grid>
+</Page>

@@ -1,5 +1,4 @@
-﻿using Spotify.Uwp.Showcase.ViewModels;
-using Windows.UI.Xaml.Controls;
+﻿using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 
 namespace Spotify.Uwp.Showcase.Pages
@@ -19,17 +18,17 @@ namespace Spotify.Uwp.Showcase.Pages
 
         #region Event Handlers
         /// <summary>OnNavigatedTo</summary>
-        /// <param name="e"></param>
+        /// <param name="e">Navigation Event Args</param>
         protected override void OnNavigatedTo(
             NavigationEventArgs e) =>
-                this.DataContext = new NewReleasesPageViewModel(
-                    SpotifySdk.Instance.SpotifySdkClient);
+                DataContext = new NewReleasesPageViewModel(
+                    SpotifySdk.Instance.Client);
         #endregion Event Handlers
 
         #region Public Methods
         /// <summary>Dispose</summary>
         public void Dispose() =>
-            this.DataContext = null;
+            DataContext = null;
         #endregion Public Methods
     }
 }
