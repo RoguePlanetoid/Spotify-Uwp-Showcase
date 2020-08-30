@@ -1,5 +1,4 @@
-﻿using Spotify.Uwp.Showcase.ViewModels;
-using System;
+﻿using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -16,32 +15,33 @@ namespace Spotify.Uwp.Showcase
         /// Constructor
         /// </summary>
         public MainPage() =>
-            this.InitializeComponent();
+            InitializeComponent();
         #endregion Constructor
 
         #region Event Handlers
         /// <summary>
         /// Page Loaded
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Page_Loaded(object sender, RoutedEventArgs e) => 
+        /// <param name="sender">Object</param>
+        /// <param name="e">Routed Event Args</param>
+        private void Page_Loaded(object sender, RoutedEventArgs e) =>
             Item.Loaded();
 
         /// <summary>OnNavigatedTo</summary>
-        /// <param name="e"></param>
+        /// <param name="e">Navigation Event Args</param>
         protected override void OnNavigatedTo(
             NavigationEventArgs e) =>
-            this.DataContext = Item
-                = new MainPageViewModel(
-                SpotifySdk.Instance.SpotifySdkClient,
-                Navigation, ContentFrame, WebView);
+            DataContext = Item = new MainPageViewModel(
+                SpotifySdk.Instance.Client,
+                Navigation,
+                ContentFrame, 
+                WebView);
 
         /// <summary>
         /// Back Requested
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="args"></param>
+        /// <param name="sender">Navigation View</param>
+        /// <param name="args">Navigation View Back Requested Event Args</param>
         private void Navigation_BackRequested(
             NavigationView sender,
             NavigationViewBackRequestedEventArgs args) =>
@@ -50,8 +50,8 @@ namespace Spotify.Uwp.Showcase
         /// <summary>
         /// Web View Navigated Completed
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="args"></param>
+        /// <param name="sender">WebView</param>
+        /// <param name="args">WebView Navigation Completed Event Args</param>
         private void WebView_NavigationCompleted(WebView sender,
             WebViewNavigationCompletedEventArgs args) =>
             Item.WebViewNavigationCompleted(sender, args);
@@ -59,24 +59,24 @@ namespace Spotify.Uwp.Showcase
         /// <summary>
         /// Web View Navigation Starting
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="args"></param>
+        /// <param name="sender">WebView</param>
+        /// <param name="args">WebView Navigation Starting Event Args</param>
         private void WebView_NavigationStarting(WebView sender,
             WebViewNavigationStartingEventArgs args) =>
             Item.WebViewNavigationStarting(sender, args);
         #endregion Event Handlers
 
         #region Public Properties
+        /// <summary>
+        /// Main Page View Model
+        /// </summary>
         public MainPageViewModel Item { get; set; }
         #endregion Public Properties
 
         #region Public Methods
         /// <summary>Dispose</summary>
-        public void Dispose()
-        {
-            Item = null;
-            this.DataContext = null;
-        }
+        public void Dispose() => 
+            DataContext = null;
         #endregion Public Methods
     }
 }

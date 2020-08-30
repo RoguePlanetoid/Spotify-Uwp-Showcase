@@ -1,17 +1,16 @@
 ﻿<Page
+    x:Name="MainPageView"
     x:Class="Spotify.Uwp.Showcase.MainPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Spotify.Uwp.Showcase"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" 
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     Loaded="Page_Loaded">
     <Grid>
         <NavigationView Name="Navigation" Visibility="Collapsed"
             Loaded="{x:Bind Item.NavigationLoaded}"
             ItemInvoked="{x:Bind Item.ItemInvoked}" 
+            AlwaysShowHeader="False"
             BackRequested="Navigation_BackRequested"
             IsSettingsVisible="False">
             <NavigationView.AutoSuggestBox>
@@ -54,44 +53,49 @@
                 <NavigationViewItemSeparator/>
                 <NavigationViewItemHeader Content="Library"/>
 
-                <NavigationViewItem Tag="usertracks" Content="Songs">
+                <NavigationViewItem Tag="tracks" Content="Songs">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE189;" FontFamily="Segoe MDL2 Assets"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
 
-                <NavigationViewItem Tag="useralbums" Content="Albums">
+                <NavigationViewItem Tag="albums" Content="Albums">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE93C;" FontFamily="Segoe MDL2 Assets"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
 
-                <NavigationViewItem Tag="userartists" Content="Artists">
+                <NavigationViewItem Tag="artists" Content="Artists">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE13D;" FontFamily="Segoe MDL2 Assets"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
 
-                <NavigationViewItem Tag="userplaylists" Content="Playlists">
+                <NavigationViewItem Tag="shows" Content="Podcasts">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE95A;" FontFamily="Segoe MDL2 Assets"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+
+                <NavigationViewItem Tag="playlists" Content="Playlists">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE142;" FontFamily="Segoe MDL2 Assets"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
+
+                <NavigationViewItemSeparator/>
+
+                <NavigationViewItem Tag="playing" 
+                ContentTemplate="{StaticResource NavigationCurrentlyPlaying}" 
+                Content="{Binding CurrentlyPlayingItem}"/>
             </NavigationView.MenuItems>
+            
             <Frame x:Name="ContentFrame" IsTabStop="True" Navigated="{x:Bind Item.Navigated}"/>
+
             <NavigationView.PaneFooter>
-                <NavigationViewItem>
-                    <NavigationViewItem.Content>
-                        <StackPanel Orientation="Horizontal">
-                            <Ellipse Width="20" Height="20">
-                                <Ellipse.Fill>
-                                    <ImageBrush ImageSource="{Binding CurrentUser.Large.Url}"/>
-                                </Ellipse.Fill>
-                            </Ellipse>
-                            <TextBlock Margin="20,0,0,0" Text="{Binding CurrentUser.DisplayName}"/>
-                        </StackPanel>
-                    </NavigationViewItem.Content>
-                </NavigationViewItem>
+                <NavigationViewItem Tag="currentuser"
+                ContentTemplate="{StaticResource NavigationCurrentUser}" 
+                Content="{Binding CurrentUser}"/>
             </NavigationView.PaneFooter>
         </NavigationView>
         <WebView Name="WebView"

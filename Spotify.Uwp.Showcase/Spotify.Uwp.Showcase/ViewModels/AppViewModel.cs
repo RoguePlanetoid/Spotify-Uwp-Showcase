@@ -1,4 +1,4 @@
-﻿using Spotify.Uwp.ViewModels;
+﻿using Spotify.NetStandard.Sdk;
 using System;
 using System.IO;
 using System.Runtime.Serialization.Json;
@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 
-namespace Spotify.Uwp.Showcase.ViewModels
+namespace Spotify.Uwp.Showcase
 {
     /// <summary>
     /// App View Model
@@ -14,12 +14,11 @@ namespace Spotify.Uwp.Showcase.ViewModels
     public class AppViewModel
     {
         #region Private Constants
-        private const string filename_token = "token.json";
         private const string filename_favourites = "favourite.json";
         #endregion Private Constants
 
         #region Private Members
-        private ISpotifySdkClient _client = null;
+        private readonly ISpotifySdkClient _client = null;
         private readonly StorageFolder _folder = ApplicationData.Current.LocalFolder;
         #endregion Private Members
 
@@ -45,7 +44,7 @@ namespace Spotify.Uwp.Showcase.ViewModels
         /// Import
         /// </summary>
         /// <param name="source">JSON</param>
-        public TViewModel Import<TViewModel>(string source) 
+        public TViewModel Import<TViewModel>(string source)
             where TViewModel : class
         {
             TViewModel result = default;
@@ -64,7 +63,7 @@ namespace Spotify.Uwp.Showcase.ViewModels
         /// <param name="source">Source ViewModel</param>
         /// <param name="filename">Filename</param>
         /// <returns>True on Success, False if Not</returns>
-        private async Task<bool> Save<TViewModel>(TViewModel source, string filename) 
+        private async Task<bool> Save<TViewModel>(TViewModel source, string filename)
             where TViewModel : class
         {
             try
@@ -75,7 +74,7 @@ namespace Spotify.Uwp.Showcase.ViewModels
                 await FileIO.WriteTextAsync(file, contents);
                 return true;
             }
-            catch(Exception)
+            catch (Exception)
             {
                 return false;
             }
@@ -96,18 +95,47 @@ namespace Spotify.Uwp.Showcase.ViewModels
                 var contents = await FileIO.ReadTextAsync(file);
                 return Import<TViewModel>(contents);
             }
-            catch(Exception)
+            catch (Exception)
             {
                 return null;
             }
         }
+
+        /// <summary>
+        /// Set Favourites
+        /// </summary>
+        /// <param name="favourites">Favourites</param>
+        private void SetFavourites(Favourites favourites)
+        {
+            if (favourites != null)
+            {
+                _client.Favourites.AlbumIds = favourites.AlbumIds;
+                _client.Favourites.ArtistIds = favourites.ArtistIds;
+                _client.Favourites.EpisodeIds = favourites.EpisodeIds;
+                _client.Favourites.ShowIds = favourites.ShowIds;
+                _client.Favourites.TrackIds = favourites.TrackIds;
+            }
+        }
+
+        /// <summary>
+        /// Get Favourites
+        /// </summary>
+        /// <returns>Favourites</returns>
+        private Favourites GetFavourites() => 
+            new Favourites()
+            {
+                AlbumIds = _client.Favourites.AlbumIds,
+                ArtistIds = _client.Favourites.ArtistIds,
+                EpisodeIds = _client.Favourites.EpisodeIds,
+                ShowIds = _client.Favourites.ShowIds,
+                TrackIds = _client.Favourites.TrackIds
+            };
         #endregion Private Methods
 
         #region Constructor
         /// <summary>Constructor</summary>
-        /// <param name="client">Music Client</param>
-        public AppViewModel(
-            ISpotifySdkClient client) => 
+        /// <param name="client">Spotify Sdk Client</param>
+        public AppViewModel(ISpotifySdkClient client) =>
             _client = client;
         #endregion Constructor
 
@@ -119,9 +147,8 @@ namespace Spotify.Uwp.Showcase.ViewModels
         {
             try
             {
-                _client.Favourites =
-                    await Load<ListFavouriteViewModel>(filename_favourites) ?? null;
-                _client.Favourites = _client.Favourites ?? new ListFavouriteViewModel();
+                if (_client?.Favourites != null)
+                    SetFavourites(await Load<Favourites>(filename_favourites));
             }
             catch { }
         }
@@ -133,7 +160,8 @@ namespace Spotify.Uwp.Showcase.ViewModels
         {
             try
             {
-                await Save(_client.Favourites, filename_favourites);
+                if(_client?.Favourites != null)
+                    await Save(GetFavourites(), filename_favourites);
             }
             catch { }
         }

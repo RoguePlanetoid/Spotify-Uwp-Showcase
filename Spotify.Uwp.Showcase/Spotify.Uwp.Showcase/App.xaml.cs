@@ -1,19 +1,8 @@
-﻿using Spotify.Uwp.Showcase.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
+﻿using System;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 namespace Spotify.Uwp.Showcase
@@ -23,7 +12,7 @@ namespace Spotify.Uwp.Showcase
     /// </summary>
     sealed partial class App : Application
     {
-        private readonly AppViewModel _app = new AppViewModel(SpotifySdk.Instance.SpotifySdkClient);
+        private readonly AppViewModel _app = new AppViewModel(SpotifySdk.Instance.Client);
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
@@ -31,8 +20,8 @@ namespace Spotify.Uwp.Showcase
         /// </summary>
         public App()
         {
-            this.InitializeComponent();
-            this.Suspending += OnSuspending;
+            InitializeComponent();
+            Suspending += OnSuspending;
         }
 
         /// <summary>
@@ -52,11 +41,7 @@ namespace Spotify.Uwp.Showcase
                 rootFrame = new Frame();
 
                 rootFrame.NavigationFailed += OnNavigationFailed;
-
                 _app.Start();
-                //SpotifySdk.Instance.SpotifySdkClient.Favourites.Add(Uwp.SpotifySdkClient.FavouriteType.Album, "3TAyJb2OItvhUcO6JjJqN0");
-                //SpotifySdk.Instance.SpotifySdkClient.Favourites.Add(Uwp.SpotifySdkClient.FavouriteType.Artist, "0OdUWJ0sBjDrqHygGUXeCF");
-                //SpotifySdk.Instance.SpotifySdkClient.Favourites.Add(Uwp.SpotifySdkClient.FavouriteType.Track, "1cTZMwcBJT0Ka3UJPXOeeN");
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {
                     //TODO: Load state from previously suspended application
@@ -85,10 +70,8 @@ namespace Spotify.Uwp.Showcase
         /// </summary>
         /// <param name="sender">The Frame which failed navigation</param>
         /// <param name="e">Details about the navigation failure</param>
-        void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
-        {
+        void OnNavigationFailed(object sender, NavigationFailedEventArgs e) => 
             throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
-        }
 
         /// <summary>
         /// Invoked when application execution is being suspended.  Application state is saved

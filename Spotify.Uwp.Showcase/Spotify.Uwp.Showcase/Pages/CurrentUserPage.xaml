@@ -1,0 +1,31 @@
+﻿<Page
+    x:Class="Spotify.Uwp.Showcase.Pages.CurrentUserPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Spotify.Uwp.Showcase.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Style="{StaticResource TitleTextBlockStyle}" Margin="12,0,0,0"
+            Text="{Binding Item.DisplayName, FallbackValue='Current User', TargetNullValue='Current User'}"/>
+
+        <ContentControl Grid.Row="1" Margin="5" Content="{Binding Item}"
+        ContentTemplate="{StaticResource CurrentUserDetailsTemplate}"/>
+
+        <GridView Grid.Row="2"  Margin="5" ItemsSource="{Binding Playlists.Collection}"
+            HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+            ItemTemplate="{StaticResource PlaylistItemTemplate}"/>
+
+        <ProgressRing Grid.Row="2" IsActive="{Binding Playlists.Loading}"
+        HorizontalAlignment="Center" VerticalAlignment="Center" 
+        Height="64" Width="64" Visibility="{Binding Playlists.Loading, 
+        Converter={StaticResource BooleanToVisibilityConverter}}"/>
+    </Grid>
+</Page>

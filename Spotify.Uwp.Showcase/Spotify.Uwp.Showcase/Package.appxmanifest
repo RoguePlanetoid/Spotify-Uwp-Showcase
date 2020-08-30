@@ -7,15 +7,15 @@
   IgnorableNamespaces="uap mp">
 
   <Identity
-    Name="b107a757-dfe3-4912-ab59-cff004f5af2c"
+    Name="658934ae-0943-49ad-b1cd-e9bd1305ace0"
     Publisher="CN=rogue"
     Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="b107a757-dfe3-4912-ab59-cff004f5af2c" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="658934ae-0943-49ad-b1cd-e9bd1305ace0" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>Spotify.Uwp.Showcase</DisplayName>
-    <PublisherDisplayName>rogue</PublisherDisplayName>
+    <DisplayName>Spotify Showcase</DisplayName>
+    <PublisherDisplayName>Comentsys</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
@@ -30,15 +30,15 @@
   <Applications>
     <Application Id="App"
       Executable="$targetnametoken$.exe"
-      EntryPoint="Spotify.Uwp.Showcase">
+      EntryPoint="Spotify.Uwp.Showcase.App">
       <uap:VisualElements
         DisplayName="Spotify Showcase"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png"
-        Description="Spotify.Uwp.Showcase"
+        Description="Spotify API .NET Standard SDK UWP Library Showcase App"
         BackgroundColor="transparent">
-        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square71x71Logo="Assets\SmallTile.png" Square310x310Logo="Assets\LargeTile.png" ShortName="Spotify Showcase"/>
-        <uap:SplashScreen Image="Assets\SplashScreen.png" />
+        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square71x71Logo="Assets\SmallTile.png" Square310x310Logo="Assets\LargeTile.png"/>
+        <uap:SplashScreen Image="Assets\SplashScreen.png"  BackgroundColor="transparent"/>
       </uap:VisualElements>
     </Application>
   </Applications>
