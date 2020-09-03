@@ -2,7 +2,7 @@
 
 Showcase Application for Spotify API .NET Standard SDK Library for Universal Windows Platform Extensions
 
-![Spotify Showcase](Resources/spotify-showcase.png)
+![Spotify Showcase](Resources/spotify-uwp-showcase.png)
 
 ## AddPlaylistDialogViewModel
 
